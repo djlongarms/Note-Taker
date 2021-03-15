@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const notes = require('../db/db.json')
+const fs = require('fs')
 
 router.get('/notes', (req, res) => {
   res.send(notes)
@@ -14,6 +15,10 @@ router.post('/notes', (req, res) => {
 
   notes.push(newNote)
 
+  fs.writeFile('./db/db.json', JSON.stringify(notes), err => {
+    if (err) console.log(err)
+  })
+
   res.sendStatus(200)
 })
 
@@ -23,6 +28,10 @@ router.delete('/notes/:id', (req, res) => {
   for(let i = req.params.id - 1; i < notes.length; i++) {
     notes[i].id = i + 1;
   }
+
+  fs.writeFile('./db/db.json', JSON.stringify(notes), err => {
+    if (err) console.log(err)
+  })
 
   res.sendStatus(200)
 })
